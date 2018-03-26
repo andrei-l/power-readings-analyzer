@@ -1,5 +1,5 @@
 package al.input
 
 trait ReadingsInputParser {
-  def parseInput(inputLocation: String): List[ReadingsInput]
+  def parseInput(inputLocation: String): Stream[ReadingsInput]
 }

@@ -13,7 +13,7 @@ class ReadingsInputCsvParser extends ReadingsInputParser {
   private final val RelayStatusPattern = "(.*)\\$".r
   final val PowerReadingsDateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss:SSS")
 
-  override def parseInput(inputLocation: String): List[ReadingsInput] = {
+  override def parseInput(inputLocation: String): Stream[ReadingsInput] = {
     Try {
       CSVReader
         .open(new File(inputLocation))
@@ -29,7 +29,7 @@ class ReadingsInputCsvParser extends ReadingsInputParser {
           )
         }
     } match {
-      case Success(l) => l.toList
+      case Success(stream) => stream
       case Failure(ex) => throw new IllegalArgumentException(s"Failed to load csv file by $inputLocation: ${ex.getMessage}", ex)
     }
   }
