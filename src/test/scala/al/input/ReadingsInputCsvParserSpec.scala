@@ -19,7 +19,7 @@ class ReadingsInputCsvParserSpec extends WordSpec with Matchers {
           1618813,
           1611729,
           1576752,
-          Some(RelayOff)
+          RelayOff
         ),
 
         ReadingsInput(
@@ -28,7 +28,7 @@ class ReadingsInputCsvParserSpec extends WordSpec with Matchers {
           1618824,
           1611741,
           1576764,
-          Some(RelayOn)
+          RelayOn
         ),
 
         ReadingsInput(
@@ -37,7 +37,7 @@ class ReadingsInputCsvParserSpec extends WordSpec with Matchers {
           1618881,
           1611797,
           1576818,
-          None
+          RelayOn
         )
       )
     }

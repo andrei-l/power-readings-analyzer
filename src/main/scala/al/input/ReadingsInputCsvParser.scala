@@ -25,7 +25,7 @@ class ReadingsInputCsvParser extends ReadingsInputParser {
             phase1.toInt,
             phase2.toInt,
             phase3.toInt,
-            Try(RelayStatus(relayStatus)).toOption
+            Try(RelayStatus(relayStatus)).getOrElse(RelayOn)
           )
         }
     } match {

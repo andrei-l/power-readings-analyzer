@@ -7,7 +7,9 @@ case class ReadingsInput(dateTime: LocalDateTime,
                          phase1: Int,
                          phase2: Int,
                          phase3: Int,
-                         relayStatus: Option[RelayStatus])
+                         relayStatus: RelayStatus) {
+  val totalPower: Int = phase1 + phase2 + phase3
+}
 
 sealed trait RelayStatus
 
