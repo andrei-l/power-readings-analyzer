@@ -55,7 +55,7 @@ class TestFinishedCondition(maybePreviousReadings: => Option[ReadingsInput]) ext
 class FFREventTriggeredCondition extends TestCondition {
   protected override def _isSatisfied(readingsInput: ReadingsInput): Boolean = {
     val satisfied = readingsInput.frequency < 49.7
-    if (lastReading.isEmpty && satisfied) {
+    if (satisfied) {
       _lastReading = Some(readingsInput)
     }
     satisfied
@@ -70,7 +70,7 @@ class RelaySwitchedInTimeCondition(maybeReadingsInputWhenFFREventTriggered: => O
         durationMillis(readingsInput.dateTime, readingsInputWhenFFREventTriggered.dateTime) <= 400
         && readingsInput.relayStatus == RelayOn)
     }
-    if (lastReading.isEmpty && relaySwitched) {
+    if (relaySwitched) {
       _lastReading = Some(readingsInput)
       _lastKilowatts = Some(kilowatts(readingsInput, maybeReadingsInputWhenFFREventTriggered.get))
     }
@@ -111,7 +111,7 @@ class DeviceWasTurnedDownForExpectedTimeCondition(maybeKilowattsAtExpectedTurnDo
       duration(readingsInput.dateTime, previousReadingsInput.dateTime).toMinutes <= 30
       && kilowatts(readingsInput, previousReadingsInput) == kilowattsAtExpectedTurnDown)).exists(isTrue)
 
-    if (lastReading.isEmpty && turnedDownForExpectedTime) {
+    if (turnedDownForExpectedTime) {
       _lastReading = Some(readingsInput)
       _lastKilowatts = Some(kilowatts(readingsInput, maybePreviousReadingsInput.get))
     }
