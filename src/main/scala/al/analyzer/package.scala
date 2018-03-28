@@ -4,8 +4,12 @@ import java.time.{Duration, LocalDateTime}
 
 import al.input.ReadingsInput
 
+import scala.language.implicitConversions
+
 package object analyzer {
-  def kilowatts(currentReadings: ReadingsInput, previousReadings: ReadingsInput): Int =
+  type Kilowatt = Int
+
+  def kilowatts(currentReadings: ReadingsInput, previousReadings: ReadingsInput): Kilowatt =
     ((totalPower(currentReadings) - totalPower(previousReadings)) * 1000
       / durationMillis(currentReadings.dateTime, previousReadings.dateTime)).intValue()
 
@@ -17,4 +21,17 @@ package object analyzer {
 
   def duration(currentReadingsTime: LocalDateTime, previousReadingsTime: LocalDateTime): Duration =
     Duration.between(previousReadingsTime, currentReadingsTime).abs()
+
+
+  def duration(maybeCurrentReadingsTime: Option[LocalDateTime], maybePreviousReadingsTime: Option[LocalDateTime]): Duration =
+    (for {
+      maybeCurrentReadingsTime <- maybeCurrentReadingsTime
+      previousReadingsTime <- maybePreviousReadingsTime
+    } yield duration(maybeCurrentReadingsTime, previousReadingsTime)).getOrElse(Duration.ZERO)
+
+
+  implicit def optionReadingsInputToOptionDateTime(maybeReadingsInput: Option[ReadingsInput]): Option[LocalDateTime] =
+    maybeReadingsInput.map(_.dateTime)
+
+  def isTrue: Boolean => Boolean = _ == true
 }
