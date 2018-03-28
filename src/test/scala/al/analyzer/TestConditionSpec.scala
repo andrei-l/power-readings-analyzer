@@ -39,11 +39,11 @@ class TestConditionSpec extends WordSpec with Matchers {
 
     "determine FFR event has been triggered" in {
       val condition = new FFREventTriggeredCondition()
-      val ffrReading = readingsInput(frequency = 49.6)
+      val ffrReading = readingsInput(frequency = 47.6)
       condition.isSatisfied(readingsInput(frequency = 49.7)) shouldEqual false
       condition.isSatisfied(readingsInput(frequency = 50.7)) shouldEqual false
+      condition.isSatisfied(readingsInput(frequency = 49.6)) shouldEqual true
       condition.isSatisfied(ffrReading) shouldEqual true
-      condition.isSatisfied(readingsInput(frequency = 47.6)) shouldEqual true
 
       condition.lastReading shouldEqual Some(ffrReading)
       condition.lastKilowatts shouldEqual None
@@ -64,16 +64,17 @@ class TestConditionSpec extends WordSpec with Matchers {
 
     "determine device shed within 30 seconds" in {
       val now = LocalDateTime.now()
+      val nowPlus28 = now.plus(28, ChronoUnit.SECONDS)
       val nowPlus29 = now.plus(29, ChronoUnit.SECONDS)
       val nowPlus31 = now.plus(31, ChronoUnit.SECONDS)
       val condition = new DeviceShedInTimeCondition(readingsInput(dateTime = now, phase1 = 1, phase2 = 1, phase3 = 1))
-      val lastInShed = readingsInput(nowPlus31, phase1 = 120, phase2 = 200, phase3 = 200)
-      condition.isSatisfied(readingsInput(nowPlus29, phase1 = 200, phase2 = 200, phase3 = 200)) shouldEqual false
-      condition.isSatisfied(readingsInput(nowPlus29, phase1 = 120, phase2 = 100, phase3 = 100)) shouldEqual false
+      val lastInShed = readingsInput(nowPlus31, phase1 = 420, phase2 = 200, phase3 = 200)
+      condition.isSatisfied(readingsInput(nowPlus28, phase1 = 200, phase2 = 200, phase3 = 200)) shouldEqual false
+      condition.isSatisfied(readingsInput(nowPlus29, phase1 = 320, phase2 = 200, phase3 = 200)) shouldEqual false
       condition.isSatisfied(lastInShed) shouldEqual true
 
       condition.lastReading shouldEqual Some(lastInShed)
-      condition.lastKilowatts shouldEqual Some(10)
+      condition.lastKilowatts shouldEqual Some(21)
     }
 
     "determine device keeps turned down for 30 minutes" in {

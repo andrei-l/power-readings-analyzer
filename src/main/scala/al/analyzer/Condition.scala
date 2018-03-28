@@ -97,7 +97,8 @@ class DeviceShedInTimeCondition(maybePreviousReadingsInput: => Option[ReadingsIn
     _kilowattsDecreasedReadins =
       if (maybeKilowatts != previousSavedKilowatts && _lastKilowatts == maybeKilowatts) Some(readingsInput) else _kilowattsDecreasedReadins
 
-    _maybePreviousReadingsInput.exists(_.dateTime.plus(30, ChronoUnit.SECONDS).isBefore(readingsInput.dateTime))
+    _maybePreviousReadingsInput = Some(readingsInput)
+    maybePreviousReadingsInput.exists(_.dateTime.plus(30, ChronoUnit.SECONDS).isBefore(readingsInput.dateTime))
   }
 }
 
